@@ -1,0 +1,59 @@
+﻿@page "/"
+@inject NavigationManager Navigation
+@inject HttpClient HttpClient
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider CustomAuthenticationStateProvider
+<div class="row">
+    <div class="col-lg-9 mx-auto rounded border p-3">
+        <h2 style="padding:15px;">Sign in </h2>
+        <EditForm Model="@loginInput" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="username" style="margin:10px;">
+                <label class="myusername" style="padding:10px;">Username</label>
+                <InputText id="username" @bind-Value="loginInput.UserName" style="margin-left:55px;" required />
+                <ValidationMessage For="@(() => loginInput.UserName)" />
+            </div>
+
+            <div class="password" style="margin:10px;">
+                <label class="mypassword" style="padding:10px;">Password</label>
+                <InputText type="password" id="password" @bind-Value="loginInput.Password" style="margin-left:58px;" required />
+                <ValidationMessage For="@(() => loginInput.Password)" />
+            </div>
+
+            <div class="btn">
+                <button type="submit" class="btn btn-primary">Login </button>
+            </div>
+            <p class="text-danger">@errorMessage</p>
+
+        </EditForm>
+
+    </div>
+</div>
+@code {
+    private string errorMessage = "";
+    private LoginInput loginInput = new LoginInput();
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await CustomAuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if(user.Identity.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/ContactList");
+        }
+    }
+    private async Task HandleLogin()
+    {
+        var response = await HttpClient.PostAsJsonAsync("/login",loginInput);
+        @if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/ContactList", true);
+        }
+        else
+        {
+            errorMessage = await response.Content.ReadAsStringAsync();
+        }
+
+    }
+
+}
