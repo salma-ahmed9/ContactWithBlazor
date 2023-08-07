@@ -3,7 +3,7 @@
 @inject NavigationManager nav;
 @inject AuthenticationStateProvider CustomAuthenticationStateProvider
 @using ContactWithBlazor.Client;
-
+<p>@Message</p>
 <AuthorizeView>
     <Authorized>
         <div class="card" style="margin:19px;">
@@ -13,9 +13,7 @@
         <div class="mb-3" style="margin-left:20px;  ">
             <div class="row">
                 <div class="col-3">
-                    <form>
-                        <input type="text" id="searchby" onkeyup="getData()" style="width:400px;" placeholder=" search by first name , last name or email ..." />
-                    </form>
+                   <input type="text" id="searchby" @bind="SearchText" @bind:event="oninput" @bind:after="PerformSearch" style="width:400px;" placeholder=" search by first name , last name or email ..." />
                 </div>
             </div>
         </div>
@@ -66,7 +64,6 @@
                                     <th>
                                         <div style="display: flex;">
                                             <button type="submit" class="btn" @onclick="async () => await Edit(item.Id.ToString())">Edit</button>
-                                            <button type="submit" class="btn btn-red" @onclick="async () => await Delete(item.Id.ToString())">Delete</button>
                                         </div>
                                     </th>
                                     
@@ -96,7 +93,10 @@
 </AuthorizeView>
 
 
-@code {
+@code 
+{
+    private string Message="";
+    private string SearchText = "";
     public List<Contact> ContactList { get; set; } = new();
     protected override async Task OnInitializedAsync()
     {
@@ -104,13 +104,18 @@
     }
     private async Task Edit(string id)
     {
-        nav.NavigateTo("/EditContact");
+        nav.NavigateTo($"/EditContact/{id}");
     }
-    private async Task Delete(string id)
+    private async Task PerformSearch()
     {
-        /*var response = await Http.DeleteAsync($"ContactList?handler=Delete&contactId={id}");
-        var data = await response.Content.ReadFromJsonAsync<List<Contact>>();*/
-       
+        if(string.IsNullOrEmpty(SearchText))
+        {
+            ContactList = await Http.GetFromJsonAsync<List<Contact>>("/existingcontact");
+        }
+        else
+        {
+            ContactList = await Http.GetFromJsonAsync<List<Contact>>($"/SearchContact/{SearchText}");
+        }
         
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using ContactWithBlazor.Client.Shared;
+using System.Diagnostics.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,12 +29,34 @@ app.MapGet("/existingcontact", async (HttpContext context, EdgeDBClient client) 
     return Results.Ok(result.ToList());
 });
 
-app.MapGet("getcontactwithid", async (HttpContext context, EdgeDBClient client) =>
+app.MapGet("/getcontactwithid/{id}", async (string id,HttpContext context, EdgeDBClient client) =>
 {
-    var id = context.Request.Query["id"];
-    Contact result = await client.QuerySingleAsync<Contact>("SELECT Contact{*} FILTER .id = <uuid>$id", new Dictionary<string, object?> { { "id", id } });
-    
+    Guid contactId = Guid.Parse(id);
+    Contact result = await client.QuerySingleAsync<Contact>("SELECT Contact{*} FILTER .id = <uuid>$id", new Dictionary<string, object?> { { "id", contactId } });
+    return result;
 });
+
+app.MapGet("/SearchContact/{searchText}", async (string searchText, HttpContext context, EdgeDBClient client) =>
+{
+    List<Contact> Contacts = new List<Contact>();
+    List<Contact> FilteredContacts = new List<Contact>();
+    var output = await client.QueryAsync<Contact>("SELECT Contact {first_name,last_name,email,title,birth_date,description,marriage_status}  Order by .first_name;");
+    Contacts = output.ToList();
+    if (string.IsNullOrEmpty(searchText))
+    {
+        return Results.Ok(Contacts);
+    }
+    searchText = searchText.ToLower();
+    foreach (var contact in Contacts)
+    {
+        if (contact.FirstName.ToLower().Contains(searchText) || contact.LastName.ToLower().Contains(searchText) || contact.Email.ToLower().Contains(searchText))
+        {
+            FilteredContacts.Add(contact);
+        }
+    }
+    return Results.Ok(FilteredContacts);
+});
+
 
 app.MapGet("/logoutuser", async (HttpContext context, EdgeDBClient client) =>
 {
@@ -50,6 +73,34 @@ app.MapGet("/getuser", async (HttpContext context, EdgeDBClient client) =>
         loginObject.Role= user.FindFirstValue(ClaimTypes.Role);
     }
     return await Task.FromResult(loginObject);
+});
+
+app.MapPost("/editcontact", async (HttpContext context, EdgeDBClient client, Contact contact) =>
+{
+    if (string.IsNullOrEmpty(contact.FirstName) || string.IsNullOrEmpty(contact.LastName) || string.IsNullOrEmpty(contact.Email) || string.IsNullOrEmpty(contact.Title) || string.IsNullOrEmpty(contact.BirthDate.ToString()) || string.IsNullOrEmpty(contact.Username) || string.IsNullOrEmpty(contact.Password))
+    {
+        context.Response.StatusCode = 400;
+        await context.Response.WriteAsync("All fields must be filled.");
+        return;
+    }
+    var passwordHasher = new PasswordHasher<string>();
+    contact.Password = passwordHasher.HashPassword(null, contact.Password);
+    var query = "Update Contact FILTER .id = <uuid>$id SET {username := <str>$username, password := <str>$password, role := <str>$role,first_name := <str>$first_name, last_name := <str>$last_name, email := <str>$email, title := <str>$title, birth_date := <datetime>$birth_date, description := <str>$description, marriage_status := <bool>$marriage_status} ";
+    await client.ExecuteAsync(query, new Dictionary<string, object?>
+    {
+       {"id", contact.Id},
+       {"username", contact.Username},
+       {"password", contact.Password},
+       {"role", contact.Role},
+       {"first_name", contact.FirstName},
+       {"last_name", contact.LastName},
+       {"email", contact.Email},
+       {"title", contact.Title},
+       {"birth_date", contact.BirthDate},
+       {"description", contact.Description},
+       {"marriage_status", contact.MarriageStatus}
+    });
+
 });
 
 app.MapPost("/addcontact", async (HttpContext context, EdgeDBClient client, Contact contact) =>

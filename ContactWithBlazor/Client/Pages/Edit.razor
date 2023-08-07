@@ -1,4 +1,4 @@
-﻿@page "/EditContact"
+﻿@page "/EditContact/{id}"
 @inject NavigationManager Navigation
 @inject HttpClient Http
 <div class="row">
@@ -63,8 +63,9 @@
             </div>
 
             <div class="btn">
-                <button type="submit" class="btn btn-primary">Add Contact</button>
+                <button type="submit" class="btn btn-primary">Edit Contact</button>
             </div>
+            <p class="text-danger">@errorMessage</p>
           
         </EditForm>
 
@@ -72,15 +73,25 @@
 </div>
 
 @code {
-    private Contact contact = new Contact();
+    private string errorMessage = "";
     [Parameter]
-    public string id { get; set; }
+    public string Id { get; set; }
+    private Contact contact = new Contact();
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine(id);
+        contact = await Http.GetFromJsonAsync<Contact>($"/getcontactwithid/{Id}");
+        contact.Password = string.Empty;
     }
     private async Task HandleEdit()
     {
-        
+        var response = await Http.PostAsJsonAsync("/editcontact", contact);
+        @if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/ContactList", true);
+        }
+        else
+        {
+            errorMessage = await response.Content.ReadAsStringAsync();
+        }
     }
 }
