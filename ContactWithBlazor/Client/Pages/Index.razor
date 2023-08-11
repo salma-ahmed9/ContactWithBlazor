@@ -3,17 +3,19 @@
 @inject NavigationManager nav;
 @inject AuthenticationStateProvider CustomAuthenticationStateProvider
 @using ContactWithBlazor.Client;
-<p>@Message</p>
+@using Microsoft.Extensions.Localization;
+@using System.Globalization;
+@inject IStringLocalizer<Index> L;
 <AuthorizeView>
     <Authorized>
         <div class="card" style="margin:19px;">
-            <h2 style="text-align:center; padding:12px;">Contact List</h2>
+            <h2 style="text-align:center; padding:12px;">@L["contactlist"]</h2>
         </div>
-        <p style="padding-left:17px; font-weight:600"> you can search for a contact by entering first name , last name or email</p>
+        <p style="padding-left:17px; font-weight:600"> @L["searchby"]</p>
         <div class="mb-3" style="margin-left:20px;  ">
             <div class="row">
                 <div class="col-3">
-                   <input type="text" id="searchby" @bind="SearchText" @bind:event="oninput" @bind:after="PerformSearch" style="width:400px;" placeholder=" search by first name , last name or email ..." />
+                   <input type="text" id="searchby" @bind="SearchText" @bind:event="oninput" @bind:after="PerformSearch" style="width:400px;"  />
                 </div>
             </div>
         </div>
@@ -22,28 +24,28 @@
                 <thead style="background-color: cornflowerblue;">
                     <tr>
                         <th>
-                            First name
+                            @L["firstname"]
                         </th>
                         <th>
-                            Last name
+                            @L["lastname"]
                         </th>
                         <th>
-                            Email
+                            @L["email"]
                         </th>
                         <th>
-                            Title
+                            @L["title"]
                         </th>
                         <th>
-                            Description
+                            @L["description"]
                         </th>
                         <th>
-                            Date of birth
+                            @L["birth"]
                         </th>
                         <th>
-                            Marriage status
+                            @L["marriage"]
                         </th>
                         <AuthorizeView Context="authContext" Roles="Admin">
-                            <Authorized><th>Actions</th></Authorized>
+                            <Authorized><th>@L["actions"]</th></Authorized>
                         </AuthorizeView>
                         
                     </tr>
@@ -63,7 +65,7 @@
                                 <Authorized>
                                     <th>
                                         <div style="display: flex;">
-                                            <button type="submit" class="btn" @onclick="async () => await Edit(item.Id.ToString())">Edit</button>
+                                            <button type="submit" class="btn" @onclick="async () => await Edit(item.Id.ToString())">@L["edit"]</button>
                                         </div>
                                     </th>
                                     
@@ -95,7 +97,6 @@
 
 @code 
 {
-    private string Message="";
     private string SearchText = "";
     public List<Contact> ContactList { get; set; } = new();
     protected override async Task OnInitializedAsync()

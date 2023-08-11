@@ -3,25 +3,28 @@
 @inject NavigationManager Navigation
 @inject HttpClient HttpClient
 @inject AuthenticationStateProvider CustomAuthenticationStateProvider
-<div class="page">
+@using Microsoft.AspNetCore.WebUtilities;
+@using Microsoft.Extensions.Localization;
+@using System.Globalization;
+@inject IStringLocalizer<MainLayout> L;
+<div class="page" dir="@TextDirection">
     <div class="sidebar">
         <NavMenu />
     </div>
-
     <main>
-        <AuthorizeView >
-            <Authorized>
-                <div class="top-row px-4">
-                    <button type="submit" class="btn btn-primary" @onclick="LogOut">Logout</button>
-                </div>
-            </Authorized>
-            <NotAuthorized>
-                <div class="top-row px-4">
-                   <a href="">About</a>
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
+        <div class="top-row px-4">
+             <LanguageSelector />
+            <AuthorizeView>
+                <Authorized>
+                   <button type="submit" class="btn btn-primary" @onclick="LogOut">@L["logout"]</button>
 
+                </Authorized>
+
+            </AuthorizeView>
+
+          </div>
+        
+        
         <article class="content px-4">
             @Body
         </article>
@@ -30,11 +33,12 @@
 
 @code 
 {
-    
+    private string TextDirection => CultureInfo.CurrentCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr";
     private async Task LogOut()
     {
         await HttpClient.GetAsync("/logoutuser");
         Navigation.NavigateTo("/", true);
         
     }
+   
 }

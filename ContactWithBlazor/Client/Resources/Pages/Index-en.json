@@ -1,0 +1,13 @@
+﻿{
+  "contactlist": "Contact List",
+  "searchby": "you can search for a contact by entering first name , last name or email",
+  "firstname": "First name",
+  "lastname": "Last name",
+  "email": "Email",
+  "title": "Title",
+  "description": "Description",
+  "birth": "Date of birth",
+  "marriage": "Marriage status",
+  "actions": "Actions",
+  "edit": "Edit"
+}

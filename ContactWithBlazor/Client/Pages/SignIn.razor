@@ -2,32 +2,36 @@
 @inject NavigationManager Navigation
 @inject HttpClient HttpClient
 @using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.WebUtilities;
+@using Microsoft.Extensions.Localization;
+@using System.Globalization;
 @inject AuthenticationStateProvider CustomAuthenticationStateProvider
+@inject IStringLocalizer<SignIn> L;
 <div class="row">
     <div class="col-lg-9 mx-auto rounded border p-3">
-        <h2 style="padding:15px;">Sign in </h2>
+        <h2 style="padding:15px;">@L["signin"] </h2>
         <EditForm Model="@loginInput" OnValidSubmit="HandleLogin">
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class="username" style="margin:10px;">
-                <label class="myusername" style="padding:10px;">Username</label>
+                <label class="myusername" style="padding:10px;">@L["username"]</label>
                 <InputText id="username" @bind-Value="loginInput.UserName" style="margin-left:55px;" required />
                 <ValidationMessage For="@(() => loginInput.UserName)" />
             </div>
 
             <div class="password" style="margin:10px;">
-                <label class="mypassword" style="padding:10px;">Password</label>
+                <label class="mypassword" style="padding:10px;">@L["password"]</label>
                 <InputText type="password" id="password" @bind-Value="loginInput.Password" style="margin-left:58px;" required />
                 <ValidationMessage For="@(() => loginInput.Password)" />
             </div>
 
             <div class="btn">
-                <button type="submit" class="btn btn-primary">Login </button>
+                <button type="submit" class="btn btn-primary">@L["login"] </button>
             </div>
             <p class="text-danger">@errorMessage</p>
 
         </EditForm>
-
+       
     </div>
 </div>
 @code {
@@ -55,5 +59,5 @@
         }
 
     }
-
+ 
 }

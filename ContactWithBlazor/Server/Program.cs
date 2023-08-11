@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using ContactWithBlazor.Client.Shared;
 using System.Diagnostics.Contracts;
+using Microsoft.Extensions.Options;
+using System.Net.NetworkInformation;
+using Microsoft.Extensions.Localization;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +25,7 @@ builder.Services.AddEdgeDB(EdgeDBConnection.FromInstanceName("contactdb"), confi
 builder.Services.AddApiAuthorization();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddHttpClient();
+
 var app = builder.Build();
 
 app.MapGet("/existingcontact", async (HttpContext context, EdgeDBClient client) =>
@@ -200,6 +205,7 @@ app.UseHttpsRedirection();
 
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
+app.UseRequestLocalization(app.Services.GetService<IOptions<RequestLocalizationOptions>>().Value);
 
 app.UseRouting();
 app.UseAuthentication();

@@ -4,20 +4,44 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	  <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="7.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.9" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Localization" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.10" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	<PackageReference Include="SoloX.BlazorJsonLocalization" Version="2.0.0-alpha.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Shared\ContactWithBlazor.Shared.csproj" />
+	  <EmbeddedResource Include="Resources\**\*.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="resources\pages\Create-ar.json" />
+    <Content Remove="resources\pages\Create-en.json" />
+    <Content Remove="resources\pages\Edit-ar.json" />
+    <Content Remove="resources\pages\Edit-en.json" />
+    <Content Remove="resources\pages\Index-ar.json" />
+    <Content Remove="resources\pages\Index-en.json" />
+    <Content Remove="Resources\Pages\SignIn-ar.json" />
+    <Content Remove="resources\shared\MainLayout-ar.json" />
+    <Content Remove="resources\shared\MainLayout-en.json" />
+    <Content Remove="resources\shared\NavMenu-ar.json" />
+    <Content Remove="resources\shared\NavMenu-en.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\Shared\" />
   </ItemGroup>
 
 </Project>

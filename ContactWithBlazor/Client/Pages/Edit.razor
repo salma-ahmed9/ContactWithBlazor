@@ -1,29 +1,32 @@
 ﻿@page "/EditContact/{id}"
 @inject NavigationManager Navigation
 @inject HttpClient Http
+@using Microsoft.Extensions.Localization;
+@using System.Globalization;
+@inject IStringLocalizer<Edit> L;
 <div class="row">
     <div class="col-lg-9 mx-auto rounded border p-3" style="height:800px; margin-bottom:50px;">
-        <h2 style="padding:15px;">Edit Contact</h2>
+        <h2 style="padding:15px;">@L["editcontact"]</h2>
         <EditForm Model="@contact" OnValidSubmit="HandleEdit">
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class="firstname" style="margin:10px;">
-                <label class="myfirstname" style="padding:10px;">First Name</label>
+                <label class="myfirstname" style="padding:10px;">@L["firstname"]</label>
                 <InputText @bind-Value="contact.FirstName"  style="margin-left:45px;" required />
                 <ValidationMessage For="@(() => contact.FirstName)" />
             </div>
             <div class="lastname" style="margin:10px;">
-                <label class="mylastname" style="padding:10px;">Last Name</label>
+                <label class="mylastname" style="padding:10px;">@L["lastname"]</label>
                 <InputText @bind-Value="contact.LastName" style="margin-left:44px;" required />
                 <ValidationMessage For="@(() => contact.LastName)" />
             </div>
             <div class="email" style="margin:10px;">
-                <label class="myemail" style="padding:10px;">Email</label>
+                <label class="myemail" style="padding:10px;">@L["email"]</label>
                 <InputText type="email" @bind-Value="contact.Email" style="margin-left:82px;" required />
                 <ValidationMessage For="@(() => contact.Email)" />
             </div>
             <div class="title" style="margin:10px;">
-                <label class="mytitle" style="padding:10px;">Title</label>
+                <label class="mytitle" style="padding:10px;">@L["title"]</label>
                 <InputSelect id="title" style="margin-left:90px; width:192px;" @bind-Value="contact.Title">
                     <option value="Mr">Mr</option>
                     <option value="Miss">Miss</option>
@@ -31,31 +34,31 @@
                 </InputSelect>
             </div>
             <div class="description" style="margin:10px;">
-                <label class="mydescription" style="display:inline-block; text-align: right; padding-left:10px;">Description</label>
+                <label class="mydescription" style="display:inline-block; text-align: right; padding-left:10px;">@L["description"]</label>
                 <InputTextArea id="description" placeholder="Enter your description here ...." style="margin-left:51px;  display: inline-block;
                   vertical-align: top;" rows="5" cols="50" @bind-Value="contact.Description"></InputTextArea>
             </div>
             <div class="dateofbirth" style="margin:15px;">
-                <label class="mydateofbirth" style="padding-left:3px;">Date of Birth</label>
+                <label class="mydateofbirth" style="padding-left:3px;">@L["birth"]</label>
                 <InputDate style="margin-left:44px;" @bind-Value="contact.BirthDate" required></InputDate>
             </div>
             <div class="marriage" style="margin:10px;">
-                <label class="mystatus" style="padding:9px;">Marriage Status</label>
+                <label class="mystatus" style="padding:9px;">@L["marriage"]</label>
                 <InputSelect id="marriage" style="margin-left:17px; width:192px;" @bind-Value="contact.MarriageStatus">
                     <option value="true">Yes</option>
                     <option value="false">No</option>
                 </InputSelect>
             </div>
             <div class="username" style="margin:10px;">
-                <label class="myusername" style="padding:10px;">Username</label>
+                <label class="myusername" style="padding:10px;">@L["username"]</label>
                 <InputText @bind-Value="contact.Username" style="margin-left:55px;" required />
             </div>
             <div class="password" style="margin:10px;">
-                <label class="mypassword" style="padding:10px;">Password</label>
+                <label class="mypassword" style="padding:10px;">@L["password"]</label>
                 <InputText type="password" @bind-Value="contact.Password" style="margin-left:58px;" required />
             </div>
             <div class="role" style="margin:10px;">
-                <label class="myrole" style="padding:9px;">Specify Role</label>
+                <label class="myrole" style="padding:9px;">@L["role"]</label>
                 <InputSelect id="role" style="margin-left:40px; width:192px;" @bind-Value="contact.Role">
                     <option value="Admin">Admin</option>
                     <option value="User">User</option>
@@ -63,7 +66,7 @@
             </div>
 
             <div class="btn">
-                <button type="submit" class="btn btn-primary">Edit Contact</button>
+                <button type="submit" class="btn btn-primary">@L["editcontact"]</button>
             </div>
             <p class="text-danger">@errorMessage</p>
           
