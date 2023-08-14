@@ -9,13 +9,13 @@
 <AuthorizeView>
     <Authorized>
         <div class="card" style="margin:19px;">
-            <h2 style="text-align:center; padding:12px;">@L["contactlist"]</h2>
+            <h2 style="text-align:center; padding:12px;">@L["contact-list"]</h2>
         </div>
-        <p style="padding-left:17px; font-weight:600"> @L["searchby"]</p>
+        <p style="padding-left:17px; font-weight:600"> @L["search-by"]</p>
         <div class="mb-3" style="margin-left:20px;  ">
             <div class="row">
                 <div class="col-3">
-                   <input type="text" id="searchby" @bind="SearchText" @bind:event="oninput" @bind:after="PerformSearch" style="width:400px;"  />
+                   <input type="text" id="searchby" @bind="_searchText" @bind:event="oninput" @bind:after="PerformSearch" style="width:400px;"  />
                 </div>
             </div>
         </div>
@@ -24,10 +24,10 @@
                 <thead style="background-color: cornflowerblue;">
                     <tr>
                         <th>
-                            @L["firstname"]
+                            @L["first-name"]
                         </th>
                         <th>
-                            @L["lastname"]
+                            @L["last-name"]
                         </th>
                         <th>
                             @L["email"]
@@ -97,7 +97,7 @@
 
 @code 
 {
-    private string SearchText = "";
+    private string _searchText = "";
     public List<Contact> ContactList { get; set; } = new();
     protected override async Task OnInitializedAsync()
     {
@@ -109,13 +109,13 @@
     }
     private async Task PerformSearch()
     {
-        if(string.IsNullOrEmpty(SearchText))
+        if(string.IsNullOrEmpty(_searchText))
         {
             ContactList = await Http.GetFromJsonAsync<List<Contact>>("/existingcontact");
         }
         else
         {
-            ContactList = await Http.GetFromJsonAsync<List<Contact>>($"/SearchContact/{SearchText}");
+            ContactList = await Http.GetFromJsonAsync<List<Contact>>($"/SearchContact/{_searchText}");
         }
         
     }

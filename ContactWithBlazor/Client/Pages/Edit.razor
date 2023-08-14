@@ -6,28 +6,28 @@
 @inject IStringLocalizer<Edit> L;
 <div class="row">
     <div class="col-lg-9 mx-auto rounded border p-3" style="height:800px; margin-bottom:50px;">
-        <h2 style="padding:15px;">@L["editcontact"]</h2>
-        <EditForm Model="@contact" OnValidSubmit="HandleEdit">
+        <h2 style="padding:15px;">@L["edit-contact"]</h2>
+        <EditForm Model="@_contact" OnValidSubmit="HandleEdit">
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class="firstname" style="margin:10px;">
-                <label class="myfirstname" style="padding:10px;">@L["firstname"]</label>
-                <InputText @bind-Value="contact.FirstName"  style="margin-left:45px;" required />
-                <ValidationMessage For="@(() => contact.FirstName)" />
+                <label class="myfirstname" style="padding:10px;">@L["first-name"]</label>
+                <InputText @bind-Value="_contact.FirstName"  style="margin-left:45px;" required />
+                <ValidationMessage For="@(() => _contact.FirstName)" />
             </div>
             <div class="lastname" style="margin:10px;">
-                <label class="mylastname" style="padding:10px;">@L["lastname"]</label>
-                <InputText @bind-Value="contact.LastName" style="margin-left:44px;" required />
-                <ValidationMessage For="@(() => contact.LastName)" />
+                <label class="mylastname" style="padding:10px;">@L["last-name"]</label>
+                <InputText @bind-Value="_contact.LastName" style="margin-left:44px;" required />
+                <ValidationMessage For="@(() => _contact.LastName)" />
             </div>
             <div class="email" style="margin:10px;">
                 <label class="myemail" style="padding:10px;">@L["email"]</label>
-                <InputText type="email" @bind-Value="contact.Email" style="margin-left:82px;" required />
-                <ValidationMessage For="@(() => contact.Email)" />
+                <InputText type="email" @bind-Value="_contact.Email" style="margin-left:82px;" required />
+                <ValidationMessage For="@(() => _contact.Email)" />
             </div>
             <div class="title" style="margin:10px;">
                 <label class="mytitle" style="padding:10px;">@L["title"]</label>
-                <InputSelect id="title" style="margin-left:90px; width:192px;" @bind-Value="contact.Title">
+                <InputSelect id="title" style="margin-left:90px; width:192px;" @bind-Value="_contact.Title">
                     <option value="Mr">Mr</option>
                     <option value="Miss">Miss</option>
                     <option value="Mrs">Mrs</option>
@@ -36,30 +36,30 @@
             <div class="description" style="margin:10px;">
                 <label class="mydescription" style="display:inline-block; text-align: right; padding-left:10px;">@L["description"]</label>
                 <InputTextArea id="description" placeholder="Enter your description here ...." style="margin-left:51px;  display: inline-block;
-                  vertical-align: top;" rows="5" cols="50" @bind-Value="contact.Description"></InputTextArea>
+                  vertical-align: top;" rows="5" cols="50" @bind-Value="_contact.Description"></InputTextArea>
             </div>
             <div class="dateofbirth" style="margin:15px;">
                 <label class="mydateofbirth" style="padding-left:3px;">@L["birth"]</label>
-                <InputDate style="margin-left:44px;" @bind-Value="contact.BirthDate" required></InputDate>
+                <InputDate style="margin-left:44px;" @bind-Value="_contact.BirthDate" required></InputDate>
             </div>
             <div class="marriage" style="margin:10px;">
                 <label class="mystatus" style="padding:9px;">@L["marriage"]</label>
-                <InputSelect id="marriage" style="margin-left:17px; width:192px;" @bind-Value="contact.MarriageStatus">
+                <InputSelect id="marriage" style="margin-left:17px; width:192px;" @bind-Value="_contact.MarriageStatus">
                     <option value="true">Yes</option>
                     <option value="false">No</option>
                 </InputSelect>
             </div>
             <div class="username" style="margin:10px;">
                 <label class="myusername" style="padding:10px;">@L["username"]</label>
-                <InputText @bind-Value="contact.Username" style="margin-left:55px;" required />
+                <InputText @bind-Value="_contact.Username" style="margin-left:55px;" required />
             </div>
             <div class="password" style="margin:10px;">
                 <label class="mypassword" style="padding:10px;">@L["password"]</label>
-                <InputText type="password" @bind-Value="contact.Password" style="margin-left:58px;" required />
+                <InputText type="password" @bind-Value="_contact.Password" style="margin-left:58px;" required />
             </div>
             <div class="role" style="margin:10px;">
                 <label class="myrole" style="padding:9px;">@L["role"]</label>
-                <InputSelect id="role" style="margin-left:40px; width:192px;" @bind-Value="contact.Role">
+                <InputSelect id="role" style="margin-left:40px; width:192px;" @bind-Value="_contact.Role">
                     <option value="Admin">Admin</option>
                     <option value="User">User</option>
                 </InputSelect>
@@ -68,7 +68,7 @@
             <div class="btn">
                 <button type="submit" class="btn btn-primary">@L["editcontact"]</button>
             </div>
-            <p class="text-danger">@errorMessage</p>
+            <p class="text-danger">@_errorMessage</p>
           
         </EditForm>
 
@@ -76,25 +76,25 @@
 </div>
 
 @code {
-    private string errorMessage = "";
+    private string _errorMessage = "";
     [Parameter]
-    public string Id { get; set; }
-    private Contact contact = new Contact();
+    public string id { get; set; }
+    private Contact _contact = new Contact();
     protected override async Task OnInitializedAsync()
     {
-        contact = await Http.GetFromJsonAsync<Contact>($"/getcontactwithid/{Id}");
-        contact.Password = string.Empty;
+        _contact = await Http.GetFromJsonAsync<Contact>($"/getcontactwithid/{id}");
+        _contact.Password = string.Empty;
     }
     private async Task HandleEdit()
     {
-        var response = await Http.PostAsJsonAsync("/editcontact", contact);
+        var response = await Http.PostAsJsonAsync("/editcontact", _contact);
         @if (response.IsSuccessStatusCode)
         {
             Navigation.NavigateTo("/ContactList", true);
         }
         else
         {
-            errorMessage = await response.Content.ReadAsStringAsync();
+            _errorMessage = await response.Content.ReadAsStringAsync();
         }
     }
 }

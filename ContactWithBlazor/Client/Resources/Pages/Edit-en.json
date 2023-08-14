@@ -1,7 +1,7 @@
 ﻿{
-  "editcontact": "Edit contact",
-  "firstname": "First name",
-  "lastname": "Last name",
+  "edit-contact": "Edit contact",
+  "first-name": "First name",
+  "last-name": "Last name",
   "email": "Email",
   "title": "Title",
   "description": "Description",

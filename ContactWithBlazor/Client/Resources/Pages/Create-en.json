@@ -1,7 +1,7 @@
 ﻿{
-  "newcontact": "Add contact",
-  "firstname": "First name",
-  "lastname": "Last name",
+  "new-contact": "Add contact",
+  "first-name": "First name",
+  "last-name": "Last name",
   "email": "Email",
   "title": "Title",
   "description": "Description",

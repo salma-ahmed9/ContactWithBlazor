@@ -7,7 +7,7 @@
 @using Microsoft.Extensions.Localization;
 @using System.Globalization;
 @inject IStringLocalizer<MainLayout> L;
-<div class="page" dir="@TextDirection">
+<div class="page" dir="@_textDirection">
     <div class="sidebar">
         <NavMenu />
     </div>
@@ -16,7 +16,7 @@
              <LanguageSelector />
             <AuthorizeView>
                 <Authorized>
-                   <button type="submit" class="btn btn-primary" @onclick="LogOut">@L["logout"]</button>
+                   <button type="submit" class="btn btn-primary" @onclick="LogOut">@L["log-out"]</button>
 
                 </Authorized>
 
@@ -33,7 +33,7 @@
 
 @code 
 {
-    private string TextDirection => CultureInfo.CurrentCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr";
+    private string _textDirection => CultureInfo.CurrentCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr";
     private async Task LogOut()
     {
         await HttpClient.GetAsync("/logoutuser");

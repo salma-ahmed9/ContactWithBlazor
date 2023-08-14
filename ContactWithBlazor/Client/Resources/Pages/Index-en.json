@@ -1,8 +1,8 @@
 ﻿{
-  "contactlist": "Contact List",
-  "searchby": "you can search for a contact by entering first name , last name or email",
-  "firstname": "First name",
-  "lastname": "Last name",
+  "contact-list": "Contact List",
+  "search-by": "you can search for a contact by entering first name , last name or email",
+  "first-name": "First name",
+  "last-name": "Last name",
   "email": "Email",
   "title": "Title",
   "description": "Description",

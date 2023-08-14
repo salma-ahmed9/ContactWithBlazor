@@ -9,34 +9,34 @@
 @inject IStringLocalizer<SignIn> L;
 <div class="row">
     <div class="col-lg-9 mx-auto rounded border p-3">
-        <h2 style="padding:15px;">@L["signin"] </h2>
-        <EditForm Model="@loginInput" OnValidSubmit="HandleLogin">
+        <h2 style="padding:15px;">@L["sign-in"] </h2>
+        <EditForm Model="@_loginInput" OnValidSubmit="HandleLogin">
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class="username" style="margin:10px;">
                 <label class="myusername" style="padding:10px;">@L["username"]</label>
-                <InputText id="username" @bind-Value="loginInput.UserName" style="margin-left:55px;" required />
-                <ValidationMessage For="@(() => loginInput.UserName)" />
+                <InputText id="username" @bind-Value="_loginInput.UserName" style="margin-left:55px;" required />
+                <ValidationMessage For="@(() => _loginInput.UserName)" />
             </div>
 
             <div class="password" style="margin:10px;">
                 <label class="mypassword" style="padding:10px;">@L["password"]</label>
-                <InputText type="password" id="password" @bind-Value="loginInput.Password" style="margin-left:58px;" required />
-                <ValidationMessage For="@(() => loginInput.Password)" />
+                <InputText type="password" id="password" @bind-Value="_loginInput.Password" style="margin-left:58px;" required />
+                <ValidationMessage For="@(() => _loginInput.Password)" />
             </div>
 
             <div class="btn">
-                <button type="submit" class="btn btn-primary">@L["login"] </button>
+                <button type="submit" class="btn btn-primary">@L["log-in"] </button>
             </div>
-            <p class="text-danger">@errorMessage</p>
+            <p class="text-danger">@_errorMessage</p>
 
         </EditForm>
        
     </div>
 </div>
 @code {
-    private string errorMessage = "";
-    private LoginInput loginInput = new LoginInput();
+    private string _errorMessage = "";
+    private LoginInput _loginInput = new LoginInput();
     protected override async Task OnInitializedAsync()
     {
         var authState = await CustomAuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -48,14 +48,14 @@
     }
     private async Task HandleLogin()
     {
-        var response = await HttpClient.PostAsJsonAsync("/login",loginInput);
+        var response = await HttpClient.PostAsJsonAsync("/login",_loginInput);
         @if (response.IsSuccessStatusCode)
         {
             Navigation.NavigateTo("/ContactList", true);
         }
         else
         {
-            errorMessage = await response.Content.ReadAsStringAsync();
+            _errorMessage = await response.Content.ReadAsStringAsync();
         }
 
     }
